@@ -3,6 +3,8 @@ spl_autoload_register(function ($class_name) {
     include 'class/' . $class_name . '.php';
 });
 
+(new DotEnv(__DIR__ . '/.env'))->load();
+
 /*
 
 This file will contain the script in charge of retrieve the data from
@@ -13,6 +15,8 @@ It will be doing the extractions based on the alerts created.
 */
 
 $results = Alert::getAlertList();
+
+echo $_ENV['DYN_DB_HOST'];
 
 while ($row = $results->fetch_assoc()) {
     echo " id = " . $row['id'] . " | user = " . $row['email'] . "\n";

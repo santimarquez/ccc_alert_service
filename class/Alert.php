@@ -11,7 +11,7 @@ Class Alert
         $mysqli = new mysqli("localhost", "root", "root", "dyn_db");
     
         if ($mysqli->connect_errno) {
-            echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+            echo "Error connecting to MysQLL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
     
         //Get the list of active alerts
@@ -23,13 +23,10 @@ Class Alert
         ;
     
         //Manage query errors...
-        if (!$results = $mysqli->query($alerts_query)) {
-            // ¡Oh, no! La consulta falló. 
-            echo "Lo sentimos, este sitio web está experimentando problemas.";
-    
+        if (!$results = $mysqli->query($alerts_query)) {    
             // De nuevo, no hacer esto en un sitio público, aunque nosotros mostraremos
             // cómo obtener información del error
-            echo "Error: La ejecución de la consulta falló debido a: \n";
+            echo "Error: The query failed due to: \n";
             echo "Query: \n " . $alerts_query . "\n";
             echo "Errno: " . $mysqli->errno . "\n";
             echo "Error: " . $mysqli->error . "\n";
