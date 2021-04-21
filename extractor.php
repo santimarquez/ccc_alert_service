@@ -16,8 +16,6 @@ It will be doing the extractions based on the alerts created.
 
 $results = Alert::getAlertList();
 
-echo $_ENV['DYN_DB_HOST'];
-
 while ($row = $results->fetch_assoc()) {
     echo " id = " . $row['id'] . " | user = " . $row['email'] . "\n";
 }

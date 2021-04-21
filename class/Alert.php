@@ -8,7 +8,7 @@ Class Alert
     static function getAlertList()
     {
         //Connecting the DB
-        $mysqli = new mysqli("localhost", "root", "root", "dyn_db");
+        $mysqli = new mysqli($_ENV['DYN_DB_HOST'], $_ENV['DYN_DB_USER'], $_ENV['DYN_DB_PASSWORD'], $_ENV['DYN_DB_NAME']);
     
         if ($mysqli->connect_errno) {
             echo "Error connecting to MysQLL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
@@ -34,6 +34,11 @@ Class Alert
         }
     
         return $results;
+    }
+
+    static function find($id)
+    {
+        
     }
 }
 
