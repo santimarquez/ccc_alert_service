@@ -1,7 +1,7 @@
 <?php
 Class Log
 {
-    private $log_path = '/log//';
+    private $log_path = 'log/';
     public $file_pointer;
     
     function __construct()
@@ -18,6 +18,7 @@ Class Log
     private function openFile()
     {
         $file_name = self::getFileName();
+        $file_content = '';
 
         if(file_exists($file_name))
         {
@@ -38,7 +39,7 @@ Class Log
     private function getFileName()
     {
         $current_date = date("Ymd");
-        return $current_date . '_errors.log';
+        return $this->log_path . $current_date . '_errors.log';
     }
 
     /**
@@ -50,13 +51,13 @@ Class Log
      */
     public function add($string)
     {
-        $line_to_add = date("Y-m-d H:i:s") . " - \n" . $string;
+        $line_to_add = date("Y-m-d H:i:s") . " - " . $string . "\r\n";
         if(fwrite($this->file_pointer, $line_to_add))
         {
             return true;
         }else
         {
-            echo "Error adding record to the log file";
+            echo "Error adding record to the log file\r\n";
             return false;
         }
         ;
@@ -74,7 +75,7 @@ Class Log
             return true;
         }else
         {
-            echo "Error saving the log file";
+            echo "Error saving the log file\r\n";
             return false;
         }
     }

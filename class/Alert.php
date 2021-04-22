@@ -2,43 +2,37 @@
 
 Class Alert
 {
-    /*
-     * Returns an object with the list of alerts that must be executed 
+    private $logger;
+
+    /**
+     * Get the list of alerts.
+     * Returns an array wil the alert id and the email of the 
+     * user that created the alert.
+     *
+     * @return array
      */
     static function getAlertList()
     {
-        //Connecting the DB
-        $mysqli = new mysqli($_ENV['DYN_DB_HOST'], $_ENV['DYN_DB_USER'], $_ENV['DYN_DB_PASSWORD'], $_ENV['DYN_DB_NAME']);
-    
-        if ($mysqli->connect_errno) {
-            echo "Error connecting to MysQLL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
-    
-        //Get the list of active alerts
-        $alerts_query =
-        '   SELECT a.id, u.email
-            FROM alert a, user u
-            WHERE a.user_id = u.id
-            AND a.enabled = 1'
-        ;
-    
-        //Manage query errors...
-        if (!$results = $mysqli->query($alerts_query)) {    
-            // De nuevo, no hacer esto en un sitio público, aunque nosotros mostraremos
-            // cómo obtener información del error
-            echo "Error: The query failed due to: \n";
-            echo "Query: \n " . $alerts_query . "\n";
-            echo "Errno: " . $mysqli->errno . "\n";
-            echo "Error: " . $mysqli->error . "\n";
-            exit;
-        }
-    
-        return $results;
+        $result = Database::db('dyn_db', 'SELECT a.id, u.email 
+                                            FROM alert a, user u 
+                                            WHERE a.user_id = u.id 
+                                            AND a.enabled = 1');
+        return $result;
     }
 
+    /**
+     * Get one specific alert based on the alert id.
+     *
+     * @param [int] $id
+     * @return object
+     */
     static function find($id)
     {
-        
+        $result = Database::db('dyn_db', 'SELECT a.id, u.email 
+                                            FROM alert a, user u 
+                                            WHERE a.user_id = u.id 
+                                            AND a.id = ' . $id);
+        return $result;
     }
 }
 
