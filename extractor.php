@@ -50,15 +50,32 @@ if ($alert_list->num_rows ==  0) {
     $logger->save();
 }
 
-
 $logger = new Log();
 $logger->add($alert_list->num_rows . " alerts are being managed.");
 $logger->save();
 
 while($alert = $alert_list->fetch_object()) {
+    /**
+     * Get the list of sources
+     */
     $source_list = Source::getSources();
     while($source = $source_list->fetch_object()) {
-        //TODO
+        /**
+         * Prepare the destination URL
+         * and retrieve the HTML content
+         */
+        $alert_url = new Url($source->url);
+        $alert_url->append(AlertFilter::getFilters($alert->id, $source->id));
+
+        /**
+         * Retrieve HTML content if the system
+         * found available get variables
+         * for the filters in the selected source
+         */
+        if($alert_url->url != $source->url . '?')
+        {
+            echo $alert_url->url ."\n";
+        }
     }
 }
 
