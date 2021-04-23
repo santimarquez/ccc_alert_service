@@ -72,9 +72,23 @@ while($alert = $alert_list->fetch_object()) {
          * found available get variables
          * for the filters in the selected source
          */
-        if($alert_url->url != $source->url . '?')
+        if($alert_url->url == $source->url . '?')
         {
-            echo $alert_url->url ."\n";
+            goto end;
+        }
+
+        $html = new Html();
+        $html->retrieve($alert_url->url);
+
+        echo $html->stream;
+        /**
+         * If no html has been retrieve, throw 
+         * a critical error and stop the execution
+         */
+        if(!$html->exist)
+        {
+            $critical_error = true;
+            goto log_critical;
         }
     }
 }
@@ -99,5 +113,5 @@ end:
  * Log the service execution end.
  */
 $logger = new Log();
-$logger->add("-------------------------- END OF THE PROCESS --------------------------\n\n\n");
+$logger->add("-------------------------- END OF THE PROCESS --------------------------\n\n");
 $logger->save();
