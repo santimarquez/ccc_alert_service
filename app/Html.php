@@ -15,6 +15,15 @@ Class Html
         }
     }
 
+    /**
+     * Generate and execute de cURL request
+     * to get the HTML stream.
+     * Store the content in the propierty stream
+     * Fill the exist switch.
+     *
+     * @param [string] $url
+     * @return void
+     */
     public function retrieve($url)
     {
         $client = curl_init();
@@ -35,10 +44,10 @@ Class Html
 
         curl_close($client);
         
-        if(!$html)
+        if($html)
         {
             $logger = new Log();
-            $logger->add('Error getting the html from: $url');
+            $logger->add('Error getting the html from: ' . $url);
             $logger->save();
             $this->exist = false;
             $this->stream = '';
@@ -46,8 +55,11 @@ Class Html
         
         $this->stream = $html;
         $this->exist = true;
-        
-        $doc = new HTML5();
-        $this->structure = $doc->loadHTML($html->stream);
+    }
+
+    public function parse($source_id)
+    {
+        $source_name = Source::getShortDescription($source_id);
+        $parsed_stream = new $source_name();
     }
 }

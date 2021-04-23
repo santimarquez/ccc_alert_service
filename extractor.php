@@ -15,7 +15,19 @@ It will be doing the extractions based on the alerts created.
  * Firstly, add the classes autoload
  */
 spl_autoload_register(function ($class_name) {
-    include 'class/' . $class_name . '.php';
+    $class_root_path = 'app\\';
+    if(is_file($class_root_path . $class_name . '.php'))
+    {
+        include $class_root_path . $class_name . '.php';
+    }else{
+        foreach(glob($class_root_path . '*', GLOB_ONLYDIR) as $dir)
+        {
+            if(is_file($dir . '\\' . $class_name . '.php'))
+            {
+                include $dir . '\\' . $class_name . '.php';
+            }
+        }
+    }
 });
 
 /**
@@ -79,8 +91,8 @@ while($alert = $alert_list->fetch_object()) {
 
         $html = new Html();
         $html->retrieve($alert_url->url);
+        $html->parse($source->id);
 
-        echo $html->stream;
         /**
          * If no html has been retrieve, throw 
          * a critical error and stop the execution
