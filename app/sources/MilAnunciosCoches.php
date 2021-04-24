@@ -3,6 +3,7 @@
 Class MilAnunciosCoches
 {
     private $source_id = 1;
+    public $ads;
 
     public function specificParse($stream)
     {
