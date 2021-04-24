@@ -28,7 +28,7 @@ Class Html
     {
         $client = curl_init();
 
-        curl_setopt($client, CURLOPT_URL, $url);
+        curl_setopt($client, CURLOPT_URL, $url . '&orden=baratos');
         curl_setopt($client, CURLOPT_HEADER, 0);
         curl_setopt($client, CURLOPT_RETURNTRANSFER, true);
 
@@ -44,7 +44,7 @@ Class Html
 
         curl_close($client);
         
-        if($html)
+        if(!$html)
         {
             $logger = new Log();
             $logger->add('Error getting the html from: ' . $url);
@@ -60,6 +60,7 @@ Class Html
     public function parse($source_id)
     {
         $source_name = Source::getShortDescription($source_id);
-        $parsed_stream = new $source_name();
+        $source_manager = new $source_name();
+        $source_manager->specificParse($this->stream);
     }
 }
