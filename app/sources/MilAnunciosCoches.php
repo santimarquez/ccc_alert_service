@@ -10,6 +10,7 @@ Class MilAnunciosCoches
         $exploded_stream = explode('");</script><script>window.__INITIAL_CONTEXT_VALUE__ ', $exploded_stream[1]);
         $array_response = json_decode(stripslashes($exploded_stream[0]), true);
         
+        $adds_array = array();
         foreach($array_response["adListPagination"]["adList"]["ads"] as $ad)
         {
             $advertisement = new Advertisement();
