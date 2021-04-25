@@ -49,10 +49,12 @@ Class Log
      * @param [string] $string
      * @return bolean
      */
-    public function add($string)
+    static public function add($string)
     {
+        $logger = new Log();
+
         $line_to_add = date("Y-m-d H:i:s") . " - " . $string . "\r\n";
-        if(fwrite($this->file_pointer, $line_to_add))
+        if(fwrite($logger->file_pointer, $line_to_add))
         {
             return true;
         }else
@@ -60,7 +62,8 @@ Class Log
             echo "Error adding record to the log file\r\n";
             return false;
         }
-        ;
+        
+        $logger->save();
     }
 
     /**

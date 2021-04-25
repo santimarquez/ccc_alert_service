@@ -44,9 +44,7 @@ spl_autoload_register(function ($class_name) {
 /**
  * Log the service execution kick off.
  */
-$logger = new Log();
-$logger->add("----------------------- STARTING THE PROCESS EXECUTION -----------------------");
-$logger->save();
+Log::add("----------------------- STARTING THE PROCESS EXECUTION -----------------------");
 
 $alert_list = Alert::getAlertList();
 
@@ -57,14 +55,10 @@ if(!$alert_list)
 }
 
 if ($alert_list->num_rows ==  0) {
-    $logger = new Log();
-    $logger->add("There are no enabled alerts.");
-    $logger->save();
+    Log::add("There are no enabled alerts.");
 }
 
-$logger = new Log();
-$logger->add($alert_list->num_rows . " alerts are being managed.");
-$logger->save();
+Log::add($alert_list->num_rows . " alerts are being managed.");
 
 while($alert = $alert_list->fetch_object()) {
     /**
@@ -91,7 +85,28 @@ while($alert = $alert_list->fetch_object()) {
 
         $html = new Html();
         $html->retrieve($alert_url->url);
-        $html->parse($source->id);
+        $ads = $html->parse($source->id);
+        
+        /**
+         * Analize the parsed ads and insert or
+         * update if any change has been detected
+         * or it's a new ad found.
+         * 
+         */
+        foreach($ads as $ad)
+        {
+            if($found_ad = Advertisement::findUnique($ad->source_id.$ad->reference))
+            {
+                $ad->id = $found_ad->id;
+                if($ad != $found_ad)
+                {
+                    $ad->save();
+                }
+            }
+            else{
+                $ad->save();
+            }
+        }
 
         /**
          * If no html has been retrieve, throw 
@@ -111,9 +126,7 @@ while($alert = $alert_list->fetch_object()) {
 log_critical:
 if($critical_error)
 {
-    $logger = new Log();
-    $logger->add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
-    $logger->save();
+    Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
 }
 goto end;
 
@@ -124,6 +137,4 @@ end:
 /**
  * Log the service execution end.
  */
-$logger = new Log();
-$logger->add("-------------------------- END OF THE PROCESS --------------------------\n\n");
-$logger->save();
+Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");

@@ -34,9 +34,7 @@ Class Html
 
         if(!$html = curl_exec($client))
         {
-            $logger = new Log();
-            $logger->add('Curl error: ' . curl_error($client));
-            $logger->save();
+            Log::add('Curl error: ' . curl_error($client));
             
             curl_close($client);
             
@@ -46,9 +44,7 @@ Class Html
         
         if(!$html)
         {
-            $logger = new Log();
-            $logger->add('Error getting the html from: ' . $url);
-            $logger->save();
+            Log::add('Error getting the html from: ' . $url);
             $this->exist = false;
             $this->stream = '';
         }
@@ -61,6 +57,6 @@ Class Html
     {
         $source_name = Source::getShortDescription($source_id);
         $source_manager = new $source_name();
-        $source_manager->specificParse($this->stream);
+        return $source_manager->specificParse($this->stream);
     }
 }

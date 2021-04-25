@@ -53,6 +53,7 @@ Class Advertisement
         $result = Database::db('dyn_db', 'SELECT *
                                           FROM dyn_db.advertisement
                                           WHERE uac = ' . $uac_id);
+                                          
         $row = $result->fetch_object();
         if(mysqli_num_rows($result) === 1)
         {
@@ -151,9 +152,7 @@ Class Advertisement
 
         if($error)
         {
-            $logger = new Log();
-            $logger->add("Error inserting advertisement. Reg completely NULL.");
-            $logger->save();
+            Log::add("Error inserting advertisement. Reg completely NULL.");
             return false;
         }
 

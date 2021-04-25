@@ -2,7 +2,6 @@
 
 Class Database
 {
-    private $logger;
 
     /**
      * Do the connection with the MySQL database.
@@ -20,8 +19,7 @@ Class Database
         $mysqli = new mysqli($host, $user, $pass, $database);
 
         if ($mysqli->connect_errno) {
-            $this->logger
-                 ->add("Error connecting to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
+            Log::add("Error connecting to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
             return false;
         }
 
@@ -40,10 +38,8 @@ Class Database
         /**
          * Execute query and return results.
          */
-        if (!$results = $mysqli->query($query)) {    
-            $logger = new Log();
-            $logger->add("Error: The query failed due to: \nQuery: \n " . $query . "\nErrno: " . $mysqli->errno . "\nError: " . $mysqli->error . "\n");
-            $logger->save();
+        if (!$results = $mysqli->query($query)) {  
+            Log::add("Error: The query failed due to: \nQuery: \n " . $query . "\nErrno: " . $mysqli->errno . "\nError: " . $mysqli->error . "\n");
             return false;
         }
         return $results;
@@ -73,9 +69,7 @@ Class Database
          */
         if(!$host || !$user || !$password)
         {
-            $logger = new Log();
-            $logger->add("No credentials found for the selected database: $database.\nPossible issue with the .env file.");
-            $logger->save();
+            Log::add("No credentials found for the selected database: $database.\nPossible issue with the .env file.");
             return false;
         }
 
