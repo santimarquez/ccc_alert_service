@@ -31,7 +31,6 @@ spl_autoload_register(function ($class_name) {
 });
 
 
-
 /**
  * Load the environment variables
  */
@@ -97,6 +96,12 @@ while($alert = $alert_list->fetch_object()) {
          */
         foreach($ads as $ad)
         {
+            print_r(get_declared_classes());
+            die();
+            $palette = Palette::fromFilename($ad->pic_url);
+            $top = $palette->getMostUsedColors(1);
+            echo "\n\nURL: " . $ad->url . "\n color: " . $top;
+            die();
             if($found_ad = Advertisement::findUnique($ad->source_id.$ad->reference))
             {
                 $ad->id = $found_ad->id;
