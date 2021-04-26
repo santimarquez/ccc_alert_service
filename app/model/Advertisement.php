@@ -127,8 +127,10 @@ Class Advertisement
 
     /**
      * Inserts a new advertisement to the database.
-     *
-     * @return void
+     * It returns the response from the Database class:
+     * True if there was no error. False if there was an error.
+     * 
+     * @return boolean
      */
     private function insert()
     {
@@ -161,6 +163,13 @@ Class Advertisement
                                        ' VALUES ' . $insert_value_str);
     }
 
+    /**
+     * Update an already created advertisement.
+     * This method will be executed if the object
+     * has the propery "id" already set.
+     *
+     * @return boolean
+     */
     private function update()
     {
 

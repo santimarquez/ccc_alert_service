@@ -4,7 +4,6 @@ Class Html
 {
     public $exist;
     public $stream;
-    public $structure;
 
     function __construct($url = NULL)
     {
@@ -18,7 +17,7 @@ Class Html
     /**
      * Generate and execute de cURL request
      * to get the HTML stream.
-     * Store the content in the propierty stream
+     * Store the content in the property stream
      * Fill the exist switch.
      *
      * @param [string] $url
@@ -26,22 +25,14 @@ Class Html
      */
     public function retrieve($url)
     {
-        $client = curl_init();
+        // Retrieve the standard HTML parsing array for later use.
+        $htmloptions = TagFilter::GetHTMLOptions();
+        $web = new WebBrowser();
+        $result = $web->Process($url);
 
-        curl_setopt($client, CURLOPT_URL, $url . '&orden=baratos');
-        curl_setopt($client, CURLOPT_HEADER, 0);
-        curl_setopt($client, CURLOPT_RETURNTRANSFER, true);
+        // Capture the stream
+        $html = $result["body"];
 
-        if(!$html = curl_exec($client))
-        {
-            Log::add('Curl error: ' . curl_error($client));
-            
-            curl_close($client);
-            
-        }
-
-        curl_close($client);
-        
         if(!$html)
         {
             Log::add('Error getting the html from: ' . $url);

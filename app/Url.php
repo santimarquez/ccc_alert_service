@@ -8,6 +8,13 @@ Class Url
     public $path;
     public $query;
 
+    /**
+     * It will parse the information 
+     * of the different sections of a
+     * provided url string.
+     *
+     * @param [string] $url
+     */
     function __construct($url)
     {
         $this->url = $url;
@@ -17,6 +24,15 @@ Class Url
         $this->query = parse_url($url, PHP_URL_QUERY);
     }
 
+    /**
+     * It will concatenate the different
+     * get variables and their respective values
+     * to create the definitive url that will be
+     * requested.
+     *
+     * @param [type] $get_var_list
+     * @return void
+     */
     public function append($get_var_list)
     {
         if($this->query === NULL)

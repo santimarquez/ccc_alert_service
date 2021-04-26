@@ -30,6 +30,8 @@ spl_autoload_register(function ($class_name) {
     }
 });
 
+
+
 /**
  * Load the environment variables
  */
@@ -72,7 +74,7 @@ while($alert = $alert_list->fetch_object()) {
          */
         $alert_url = new Url($source->url);
         $alert_url->append(AlertFilter::getFilters($alert->id, $source->id));
-
+        
         /**
          * Retrieve HTML content if the system
          * found available get variables
