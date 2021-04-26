@@ -6,7 +6,7 @@ Class Log
     
     function __construct()
     {
-        $this->file_pointer = self::openFile();
+        $this->file_pointer = $this->openFile();
     }
 
     /**
@@ -17,7 +17,7 @@ Class Log
      */
     private function openFile()
     {
-        $file_name = self::getFileName();
+        $file_name = $this->getFileName();
         $file_content = '';
 
         if(file_exists($file_name))
