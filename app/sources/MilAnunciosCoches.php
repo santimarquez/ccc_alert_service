@@ -63,7 +63,8 @@ Class MilAnunciosCoches
                     if($tag["text"] === "Manual")
                     {
                         $ads_array[$add_counter]->gear = "M";
-                    }else{
+                    }else
+                    {
                         $ads_array[$add_counter]->gear = "A";
                     }
                 }

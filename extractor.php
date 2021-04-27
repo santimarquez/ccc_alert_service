@@ -19,7 +19,8 @@ spl_autoload_register(function ($class_name) {
     if(is_file($class_root_path . $class_name . '.php'))
     {
         include $class_root_path . $class_name . '.php';
-    }else{
+    }else
+    {
         foreach(glob($class_root_path . '*', GLOB_ONLYDIR) as $dir)
         {
             if(is_file($dir . '\\' . $class_name . '.php'))
@@ -60,6 +61,9 @@ if(!$alert_list)
 if ($alert_list->num_rows ==  0) 
 {
     Log::add("There are no enabled alerts.");
+}else
+{
+    Log::add($alert_list->num_rows . " alerts are being managed.");
 }
 
 //Log alerts data
@@ -102,9 +106,9 @@ while($alert = $alert_list->fetch_object()) {
         $ads = $html->parse($source->id);
         
         /**
-         * Analize the parsed ads and insert or
+         * Analyze the parsed ads and insert or
          * update if any change has been detected
-         * or it's a new ad found.
+         * or there's a new ad found.
          * 
          * It will analyze the vehicle color if necessary.
          * 
@@ -149,20 +153,20 @@ while($alert = $alert_list->fetch_object()) {
  * Section to log any critical error found
  */
 log_critical:
-if($critical_error)
-{
-    $logger->critical_error = true;
-    Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
-}
-goto end;
+    if($critical_error)
+    {
+        $logger->critical_error = true;
+        Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
+    }
+    goto end;
 
 /**
  * Finish the script execution
  */
 end:
-/**
- * Log the service execution end.
- */
-$logger->end_timestamp = date('Y-m-d H:i:s');
-$logger->recordDB();
-Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
+    /**
+     * Log the service execution end.
+     */
+    $logger->end_timestamp = date('Y-m-d H:i:s');
+    $logger->recordDB();
+    Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
