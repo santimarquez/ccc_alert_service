@@ -124,7 +124,8 @@ while($alert = $alert_list->fetch_object()) {
                     if($ad->save())
                     {
                         $logger->ads_updated++;
-                    }else{
+                    }else
+                    {
                         $logger->errors_found++;
                     }
                 }else{
