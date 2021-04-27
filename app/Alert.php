@@ -9,7 +9,7 @@ Class Alert
      * Returns an array wil the alert id and the email of the 
      * user that created the alert.
      *
-     * @return array
+     * @return object
      */
     static function getAlertList()
     {
@@ -23,7 +23,7 @@ Class Alert
     /**
      * Get one specific alert based on the alert id.
      *
-     * @param [int] $id
+     * @param int $id
      * @return object
      */
     static function find($id)
