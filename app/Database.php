@@ -50,7 +50,7 @@ Class Database
      * It will log an error if the selected database
      * doesn't exist
      *
-     * @param [string] $database
+     * @param string $database
      * @return object
      */
     static function db($database, $query = NULL)

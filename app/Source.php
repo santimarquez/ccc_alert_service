@@ -6,7 +6,7 @@ Class Source
      * 
      * Get the list of sources.
      *
-     * @return void
+     * @return object
      */
     static public function getSources()
     {
@@ -18,7 +18,7 @@ Class Source
      * Get the short source's description from the
      * source table.
      *
-     * @param [int] $source_id
+     * @param int $source_id
      * @return string
      */
     static public function getShortDescription($source_id)

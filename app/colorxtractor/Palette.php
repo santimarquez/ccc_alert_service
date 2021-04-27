@@ -1,7 +1,5 @@
 <?php
 
-namespace League\ColorExtractor;
-
 class Palette implements \Countable, \IteratorAggregate
 {
     /** @var array */

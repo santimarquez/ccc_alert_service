@@ -1,7 +1,5 @@
 <?php
 
-namespace League\ColorExtractor;
-
 class ColorExtractor
 {
     /** @var \League\ColorExtractor\Palette */

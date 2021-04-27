@@ -8,6 +8,7 @@ Class Advertisement
     public $price;
     public $url;
     public $pic_url;
+    public $color;
     public $phone_number;
     public $kms;
     public $gear;

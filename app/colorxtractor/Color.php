@@ -1,6 +1,5 @@
 <?php
 
-namespace League\ColorExtractor;
 
 class Color
 {

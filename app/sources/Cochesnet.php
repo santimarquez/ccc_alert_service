@@ -9,16 +9,27 @@ Class Cochesnet
      * extracting the different ads captured.
      * It will return a array of objects type Advertisement.
      *
-     * @param [string] $stream
+     * @param string $stream
      * @return array
      */
     public function specificParse($stream)
     {
         //Get the JSON string and decode
         $exploded_stream = explode('window.__INITIAL_PROPS__ = JSON.parse("', $stream);
+        if(count($exploded_stream) !== 2)
+        {
+            Log::add("The stream doesn't contain the expected data. source_id: " . $this->source_id);
+            return false;
+        }
         $exploded_stream = explode('");</script><script>window.__INITIAL_CONTEXT_VALUE__', $exploded_stream[1]);
-        $array_response = json_decode(stripslashes($exploded_stream[0]), true);
+        if(count($exploded_stream) !== 2)
+        {
+            Log::add("The stream doesn't contain the expected data. source_id: " . $this->source_id);
+            return false;
+        }
         
+        $array_response = json_decode(stripslashes($exploded_stream[0]), true);
+
         //Create the response (array with Advertisement objects)
         $ads_array = array();
         $add_counter = 0;
