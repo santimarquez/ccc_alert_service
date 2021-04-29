@@ -1,6 +1,7 @@
 <?php
 
-Class ImageParser{
+class ImageParser
+{
 
     public $path = 'temp/';
     public $filepath;
@@ -39,11 +40,10 @@ Class ImageParser{
      */
     public function load($dir)
     {
-        if(!file_put_contents($this->filepath, file_get_contents($dir)))
-        {
+        if (!file_put_contents($this->filepath, file_get_contents($dir))) {
             Log::add("Error getting the picture form the source: $dir");
         }
-        
+
         $this->original_image_data = imagecreatefromjpeg($this->filepath);
         $this->original_size_data = getimagesize($this->filepath);
         $this->input_width = $this->original_size_data[0];
@@ -62,13 +62,13 @@ Class ImageParser{
      *
      * @return string
      */
-    public function parse(){
+    public function parse()
+    {
         $this->new_file = ImageCreateTrueColor($this->new_width, $this->new_height);
         imagecopyresampled($this->new_file, $this->original_image_data, 0, 0, $this->new_width_coord, $this->new_height_coord, $this->new_width, $this->new_height, $this->new_width, $this->new_height);
         imagejpeg($this->new_file, $this->new_filepath);
 
         return $this->extractColor();
-
     }
 
     /**
@@ -78,7 +78,8 @@ Class ImageParser{
      * @param integer $length
      * @return void
      */
-    public function random($length = 10) {
+    public function random($length = 10)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -99,8 +100,8 @@ Class ImageParser{
         $w = imagesx($this->new_file);
         $h = imagesy($this->new_file);
         $r = $g = $b = 0;
-        for($y = 0; $y < $h; $y++) {
-            for($x = 0; $x < $w; $x++) {
+        for ($y = 0; $y < $h; $y++) {
+            for ($x = 0; $x < $w; $x++) {
                 $rgb = imagecolorat($this->new_file, $x, $y);
                 $r += $rgb >> 16;
                 $g += $rgb >> 8 & 255;
@@ -111,13 +112,13 @@ Class ImageParser{
         $r = dechex(round($r / $pxls));
         $g = dechex(round($g / $pxls));
         $b = dechex(round($b / $pxls));
-        if(strlen($r) < 2) {
+        if (strlen($r) < 2) {
             $r = 0 . $r;
         }
-        if(strlen($g) < 2) {
+        if (strlen($g) < 2) {
             $g = 0 . $g;
         }
-        if(strlen($b) < 2) {
+        if (strlen($b) < 2) {
             $b = 0 . $b;
         }
         return "#" . $r . $g . $b;
@@ -130,11 +131,10 @@ Class ImageParser{
      */
     public function erasePics()
     {
-        if(unlink($this->filepath) && unlink($this->new_filepath))
-        {
+        if (unlink($this->filepath) && unlink($this->new_filepath)) {
             return true;
         }
-        
+
         return false;
     }
 }

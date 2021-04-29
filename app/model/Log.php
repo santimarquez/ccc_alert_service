@@ -1,5 +1,5 @@
 <?php
-Class Log
+class Log
 {
     private $file_pointer;
 
@@ -12,7 +12,7 @@ Class Log
     public $critical_error;
     public $start_timestamp;
     public $end_timestamp;
-    
+
     function __construct()
     {
         $this->nr_alerts = 0;
@@ -36,8 +36,7 @@ Class Log
         $file_name = $this->getFileName();
         $file_content = '';
 
-        if(file_exists($file_name))
-        {
+        if (file_exists($file_name)) {
             $file_content = file_get_contents($file_name);
         }
 
@@ -68,19 +67,17 @@ Class Log
     static public function add($string)
     {
         $logger = new Log();
-        
+
         $logger->file_pointer = $logger->openFile();
 
         $line_to_add = date("Y-m-d H:i:s") . " - " . $string . "\r\n";
-        if(fwrite($logger->file_pointer, $line_to_add))
-        {
+        if (fwrite($logger->file_pointer, $line_to_add)) {
             return true;
-        }else
-        {
+        } else {
             echo "Error adding record to the log file\r\n";
             return false;
         }
-        
+
         $logger->save();
     }
 
@@ -91,11 +88,9 @@ Class Log
      */
     public function save()
     {
-        if(fclose($this->file_pointer))
-        {
+        if (fclose($this->file_pointer)) {
             return true;
-        }else
-        {
+        } else {
             echo "Error saving the log file\r\n";
             return false;
         }
@@ -113,26 +108,22 @@ Class Log
         $insert_field_str = '(';
         $insert_value_str = '(';
 
-        foreach($this as $property => $value)
-        {
-            if($property == 'file_pointer')
-            {
+        foreach ($this as $property => $value) {
+            if ($property == 'file_pointer') {
                 continue;
             }
-            if($value !== NULL)
-            {
+            if ($value !== NULL) {
                 $insert_field_str .= $property . ',';
                 $insert_value_str .= '"' . $value . '",';
             }
-            
         }
-        
+
         $insert_field_str = rtrim($insert_field_str, ',') . ')';
         $insert_value_str = rtrim($insert_value_str, ',') . ')';
 
 
         return Database::db('dyn_db', 'INSERT IGNORE 
-                                       INTO app_db.log ' . $insert_field_str . 
-                                       ' VALUES ' . $insert_value_str);
+                                       INTO app_db.log ' . $insert_field_str .
+            ' VALUES ' . $insert_value_str);
     }
 }

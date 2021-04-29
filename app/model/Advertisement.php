@@ -1,6 +1,6 @@
 <?php
 
-Class Advertisement
+class Advertisement
 {
     public $id;
     public $source_id;
@@ -29,10 +29,8 @@ Class Advertisement
                                           FROM dyn_db.advertisement
                                           WHERE id = ' . $id);
         $row = $result->fetch_object();
-        if(mysqli_num_rows($result) === 1)
-        {
-            foreach($advertisement as $property => $value)
-            {
+        if (mysqli_num_rows($result) === 1) {
+            foreach ($advertisement as $property => $value) {
                 $advertisement->$property = $row->$property;
             }
             return $advertisement;
@@ -40,7 +38,7 @@ Class Advertisement
 
         return false;
     }
-    
+
     /**
      * Find an specific advertisement based on the unique ad code (uac)
      * and returns a new instance with it's properties.
@@ -54,12 +52,10 @@ Class Advertisement
         $result = Database::db('dyn_db', 'SELECT *
                                           FROM dyn_db.advertisement
                                           WHERE uac = ' . $uac_id);
-                                          
+
         $row = $result->fetch_object();
-        if(mysqli_num_rows($result) === 1)
-        {
-            foreach($advertisement as $property => $value)
-            {
+        if (mysqli_num_rows($result) === 1) {
+            foreach ($advertisement as $property => $value) {
                 $advertisement->$property = $row->$property;
             }
             return $advertisement;
@@ -68,7 +64,7 @@ Class Advertisement
         return false;
     }
 
-    
+
     /**
      * Returns true or false depending if the ad
      * has been found in the database based on id
@@ -81,14 +77,13 @@ Class Advertisement
         $result = Database::db('dyn_db', 'SELECT id
                                           FROM dyn_db.advertisement
                                           WHERE id = ' . $id);
-        if(mysqli_num_rows($result) === 1)
-        {
+        if (mysqli_num_rows($result) === 1) {
             return true;
         }
 
         return false;
     }
-    
+
     /**
      * Returns true or false depending if the ad
      * has been found in the database based on uac
@@ -101,8 +96,7 @@ Class Advertisement
         $result = Database::db('dyn_db', 'SELECT id
                                           FROM dyn_db.advertisement
                                           WHERE uac = ' . $uac_id);
-        if(mysqli_num_rows($result) === 1)
-        {
+        if (mysqli_num_rows($result) === 1) {
             return true;
         }
 
@@ -118,8 +112,7 @@ Class Advertisement
      */
     public function save()
     {
-        if(isset($this->id))
-        {
+        if (isset($this->id)) {
             return $this->update();
         }
 
@@ -139,29 +132,25 @@ Class Advertisement
         $insert_field_str = '(';
         $insert_value_str = '(';
 
-        foreach($this as $property => $value)
-        {
-            if($value !== NULL)
-            {
+        foreach ($this as $property => $value) {
+            if ($value !== NULL) {
                 $error = false;
                 $insert_field_str .= $property . ',';
                 $insert_value_str .= '"' . $value . '",';
             }
-            
         }
-        
+
         $insert_field_str = rtrim($insert_field_str, ',') . ')';
         $insert_value_str = rtrim($insert_value_str, ',') . ')';
 
-        if($error)
-        {
+        if ($error) {
             Log::add("Error inserting advertisement. Reg completely NULL.");
             return false;
         }
 
         return Database::db('dyn_db', 'INSERT IGNORE 
-                                       INTO dyn_db.advertisement ' . $insert_field_str . 
-                                       ' VALUES ' . $insert_value_str);
+                                       INTO dyn_db.advertisement ' . $insert_field_str .
+            ' VALUES ' . $insert_value_str);
     }
 
     /**
@@ -175,21 +164,18 @@ Class Advertisement
     {
 
         $set_str = '';
-        foreach($this as $property => $value)
-        {
-            if($property === "id") continue;
-            if($value === NULL)
-            {
-                $set_str .= $property . ' = NULL,'; 
-            }else
-            {
+        foreach ($this as $property => $value) {
+            if ($property === "id") continue;
+            if ($value === NULL) {
+                $set_str .= $property . ' = NULL,';
+            } else {
                 $set_str .= $property . ' = "' . $value . '",';
             }
         }
 
         $set_str = rtrim($set_str, ',');
 
-        return Database::db('dyn_db', 'UPDATE dyn_db.advertisement SET ' . $set_str . 
-                                     ' WHERE id = ' . $this->id);
+        return Database::db('dyn_db', 'UPDATE dyn_db.advertisement SET ' . $set_str .
+            ' WHERE id = ' . $this->id);
     }
 }

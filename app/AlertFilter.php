@@ -1,6 +1,6 @@
 <?php
 
-Class AlertFilter
+class AlertFilter
 {
     /**
      * Get the list of alerts available for the selected

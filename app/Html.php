@@ -1,14 +1,13 @@
 <?php
 
-Class Html
+class Html
 {
     public $exist;
     public $stream;
 
     function __construct($url = NULL)
     {
-        if($url === NULL)
-        {
+        if ($url === NULL) {
             $this->stream = '';
             $this->exist = false;
         }
@@ -33,13 +32,12 @@ Class Html
         // Capture the stream
         $html = $result["body"];
 
-        if(!$html)
-        {
+        if (!$html) {
             Log::add('Error getting the html from: ' . $url);
             $this->exist = false;
             $this->stream = '';
         }
-        
+
         $this->stream = $html;
         $this->exist = true;
     }

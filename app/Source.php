@@ -1,6 +1,6 @@
 <?php
 
-Class Source
+class Source
 {
     /**
      * 

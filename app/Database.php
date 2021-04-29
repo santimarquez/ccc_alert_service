@@ -1,6 +1,6 @@
 <?php
 
-Class Database
+class Database
 {
 
     /**
@@ -38,7 +38,7 @@ Class Database
         /**
          * Execute query and return results.
          */
-        if (!$results = $mysqli->query($query)) {  
+        if (!$results = $mysqli->query($query)) {
             Log::add("Error: The query failed due to: \nQuery: \n " . $query . "\nErrno: " . $mysqli->errno . "\nError: " . $mysqli->error . "\n");
             return false;
         }
@@ -67,8 +67,7 @@ Class Database
         /**
          * Return error if there are no available credentials
          */
-        if(!$host || !$user || !$password)
-        {
+        if (!$host || !$user || !$password) {
             Log::add("No credentials found for the selected database: $database.\nPossible issue with the .env file.");
             return false;
         }
@@ -79,7 +78,7 @@ Class Database
          * If there is an input query return results,
          * otherwise return the database connector.
          */
-        if($query){
+        if ($query) {
             return self::select($mysqli, $query);
         }
 

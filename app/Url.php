@@ -1,6 +1,6 @@
 <?php
 
-Class Url
+class Url
 {
     public $url;
     public $protocol;
@@ -13,7 +13,7 @@ Class Url
      * of the different sections of a
      * provided url string.
      *
-     * @param [string] $url
+     * @param string $url
      */
     function __construct($url)
     {
@@ -35,12 +35,11 @@ Class Url
      */
     public function append($get_var_list)
     {
-        if($this->query === NULL)
-        {
+        if ($this->query === NULL) {
             $get_string = '?';
         }
-        
-        while($get_var = $get_var_list->fetch_object()) {
+
+        while ($get_var = $get_var_list->fetch_object()) {
             $get_string .= $get_var->get_variable . '=' . $get_var->value . '&';
         }
 

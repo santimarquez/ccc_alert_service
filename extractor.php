@@ -16,15 +16,11 @@ It will be doing the extractions based on the alerts created.
  */
 spl_autoload_register(function ($class_name) {
     $class_root_path = 'app\\';
-    if(is_file($class_root_path . $class_name . '.php'))
-    {
+    if (is_file($class_root_path . $class_name . '.php')) {
         include $class_root_path . $class_name . '.php';
-    }else
-    {
-        foreach(glob($class_root_path . '*', GLOB_ONLYDIR) as $dir)
-        {
-            if(is_file($dir . '\\' . $class_name . '.php'))
-            {
+    } else {
+        foreach (glob($class_root_path . '*', GLOB_ONLYDIR) as $dir) {
+            if (is_file($dir . '\\' . $class_name . '.php')) {
                 include $dir . '\\' . $class_name . '.php';
             }
         }
@@ -40,8 +36,8 @@ spl_autoload_register(function ($class_name) {
  * Create control variables
  */
 
- $logger = new Log();
- $critical_error = false;
+$logger = new Log();
+$critical_error = false;
 
 /**
  * Log the service execution kick off.
@@ -51,18 +47,15 @@ Log::add("----------------------- STARTING THE PROCESS EXECUTION ---------------
 $alert_list = Alert::getAlertList();
 
 //Error getting the alert list
-if(!$alert_list)
-{
+if (!$alert_list) {
     $critical_error = true;
     goto log_critical;
 }
 
 
-if ($alert_list->num_rows ==  0) 
-{
+if ($alert_list->num_rows ==  0) {
     Log::add("There are no enabled alerts.");
-}else
-{
+} else {
     Log::add($alert_list->num_rows . " alerts are being managed.");
 }
 
@@ -70,41 +63,39 @@ if ($alert_list->num_rows ==  0)
 $logger->nr_alerts = $alert_list->num_rows;
 Log::add($alert_list->num_rows . " alerts are being managed.");
 
-while($alert = $alert_list->fetch_object()) {
-    
+while ($alert = $alert_list->fetch_object()) {
+
     /**
      * Get the list of sources
      */
     $source_list = Source::getSources();
-    while($source = $source_list->fetch_object()) {
+    while ($source = $source_list->fetch_object()) {
         /**
          * Prepare the destination URL
          * and retrieve the HTML content
          */
         $alert_url = new Url($source->url);
         $alert_url->append(AlertFilter::getFilters($alert->id, $source->id));
-        
+
         /**
          * Retrieve HTML content if the system
          * found available get variables
          * for the filters in the selected source
          */
-        if($alert_url->url == $source->url . '?')
-        {
+        if ($alert_url->url == $source->url . '?') {
             goto end;
         }
 
         $html = new Html();
         $html->retrieve($alert_url->url);
 
-        if(!$html->exist)
-        {
+        if (!$html->exist) {
             $critical_error = true;
             goto log_critical;
         }
 
         $ads = $html->parse($source->id);
-        
+
         /**
          * Analyze the parsed ads and insert or
          * update if any change has been detected
@@ -113,36 +104,30 @@ while($alert = $alert_list->fetch_object()) {
          * It will analyze the vehicle color if necessary.
          * 
          */
-        foreach($ads as $ad)
-        {
+        foreach ($ads as $ad) {
             $logger->ads_found++;
-            if($found_ad = Advertisement::findUnique($ad->source_id.$ad->reference))
-            {
+            if ($found_ad = Advertisement::findUnique($ad->source_id . $ad->reference)) {
                 $ad->id = $found_ad->id;
-                if($ad != $found_ad)
-                {
-                    if($ad->save())
-                    {
+                if ($ad != $found_ad) {
+                    if ($ad->save()) {
                         $logger->ads_updated++;
-                    }else
-                    {
+                    } else {
                         $logger->errors_found++;
                     }
-                }else{
+                } else {
                     $logger->ads_ignored++;
                 }
-            }
-            else{
-                
+            } else {
                 //Extract the color:
-                $picture = new ImageParser();
-                $picture->load($ad->pic_url);
-                $ad->color = $picture->parse();
+                if ($ad->pic_url !== NULL) {
+                    $picture = new ImageParser();
+                    $picture->load($ad->pic_url);
+                    $ad->color = $picture->parse();
+                }
 
-                if($ad->save())
-                {
+                if ($ad->save()) {
                     $logger->ads_inserted++;
-                }else{
+                } else {
                     $logger->errors_found++;
                 }
             }
@@ -154,20 +139,19 @@ while($alert = $alert_list->fetch_object()) {
  * Section to log any critical error found
  */
 log_critical:
-    if($critical_error)
-    {
-        $logger->critical_error = true;
-        Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
-    }
-    goto end;
+if ($critical_error) {
+    $logger->critical_error = true;
+    Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
+}
+goto end;
 
 /**
  * Finish the script execution
  */
 end:
-    /**
-     * Log the service execution end.
-     */
-    $logger->end_timestamp = date('Y-m-d H:i:s');
-    $logger->recordDB();
-    Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
+/**
+ * Log the service execution end.
+ */
+$logger->end_timestamp = date('Y-m-d H:i:s');
+$logger->recordDB();
+Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");

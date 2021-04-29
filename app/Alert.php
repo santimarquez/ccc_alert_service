@@ -35,5 +35,3 @@ Class Alert
         return $result;
     }
 }
-
-?>
