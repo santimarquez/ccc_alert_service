@@ -1,6 +1,6 @@
 <?php
 
-Class Alert
+class Alert
 {
     private $logger;
 
@@ -32,6 +32,21 @@ Class Alert
                                             FROM alert a, user u 
                                             WHERE a.user_id = u.id 
                                             AND a.id = ' . $id);
+        return $result;
+    }
+
+    /**
+     * Get the extended information of a specific alert,
+     * which includes the average price, the trigger price...
+     *
+     * @param int $id
+     * @return object
+     */
+    static function findExtended($id)
+    {
+        $result = Database::db('dyn_db', 'SELECT *
+                                          FROM dyn_db.active_alerts
+                                          WHERE id = ' . $id);
         return $result;
     }
 }

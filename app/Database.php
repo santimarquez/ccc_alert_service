@@ -14,7 +14,7 @@ class Database
      * @param [string] $database
      * @return object
      */
-    private function connect($host, $user, $pass, $database)
+    static private function connect($host, $user, $pass, $database)
     {
         $mysqli = new mysqli($host, $user, $pass, $database);
 
@@ -33,7 +33,7 @@ class Database
      * @param [string] $query
      * @return object
      */
-    private function select($mysqli, $query)
+    static private function exec($mysqli, $query)
     {
         /**
          * Execute query and return results.
@@ -51,9 +51,11 @@ class Database
      * doesn't exist
      *
      * @param string $database
-     * @return object
+     * @param string $query
+     * @param boolean $insert_flag
+     * @return mixed|object|int
      */
-    static function db($database, $query = NULL)
+    static public function db($database, $query = NULL, $insert_flag = NULL)
     {
         /**
          * Prepare the credentials configured in the .env file
@@ -79,7 +81,14 @@ class Database
          * otherwise return the database connector.
          */
         if ($query) {
-            return self::select($mysqli, $query);
+            if ($insert_flag) {
+                self::exec($mysqli, $query);
+                $result = self::exec($mysqli, 'SELECT LAST_INSERT_ID()');
+                $response = $result->fetch_row();
+                return $response[0] ?? false;
+            } else {
+                return self::exec($mysqli, $query);
+            }
         }
 
         return $mysqli;

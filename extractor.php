@@ -66,6 +66,10 @@ Log::add($alert_list->num_rows . " alerts are being managed.");
 while ($alert = $alert_list->fetch_object()) {
 
     /**
+     * Get the already related ads list
+     */
+    $alert_related_ads = AdAlertRelation::getAssocAds($alert->id);
+    /**
      * Get the list of sources
      */
     $source_list = Source::getSources();
@@ -108,6 +112,15 @@ while ($alert = $alert_list->fetch_object()) {
             $logger->ads_found++;
             if ($found_ad = Advertisement::findUnique($ad->source_id . $ad->reference)) {
                 $ad->id = $found_ad->id;
+
+                //Add the ad to the alert's related ads:
+                if (!isset($alert_related_ads[$ad->id])) {
+                    $alert_add_relation = new AdAlertRelation();
+                    $alert_add_relation->alert_id = $alert->id;
+                    $alert_add_relation->advertisement_id = $ad->id;
+                    $alert_add_relation->save();
+                }
+
                 if ($ad != $found_ad) {
                     if ($ad->save()) {
                         $logger->ads_updated++;
@@ -118,15 +131,24 @@ while ($alert = $alert_list->fetch_object()) {
                     $logger->ads_ignored++;
                 }
             } else {
+
                 //Extract the color:
-                if ($ad->pic_url !== NULL) {
-                    $picture = new ImageParser();
-                    $picture->load($ad->pic_url);
-                    $ad->color = $picture->parse();
+                if ($_ENV['EXTRACT_COLOR'] == 'true') {
+                    if ($ad->pic_url !== NULL) {
+                        $picture = new ImageParser();
+                        $picture->load($ad->pic_url);
+                        $ad->color = $picture->parse();
+                    }
                 }
 
-                if ($ad->save()) {
+                if ($ad->id = $ad->save()) {
                     $logger->ads_inserted++;
+                    
+                    //Insert the alert-ad relation:
+                    $alert_add_relation = new AdAlertRelation();
+                    $alert_add_relation->alert_id = $alert->id;
+                    $alert_add_relation->advertisement_id = $ad->id;
+                    $alert_add_relation->save();
                 } else {
                     $logger->errors_found++;
                 }
@@ -145,12 +167,9 @@ if ($critical_error) {
 }
 goto end;
 
-/**
- * Finish the script execution
- */
 end:
 /**
- * Log the service execution end.
+ * Log the service execution end and finish the script execution
  */
 $logger->end_timestamp = date('Y-m-d H:i:s');
 $logger->recordDB();

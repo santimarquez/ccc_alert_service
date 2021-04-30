@@ -124,6 +124,6 @@ class Log
 
         return Database::db('dyn_db', 'INSERT IGNORE 
                                        INTO app_db.log ' . $insert_field_str .
-            ' VALUES ' . $insert_value_str);
+            ' VALUES ' . $insert_value_str, true);
     }
 }
