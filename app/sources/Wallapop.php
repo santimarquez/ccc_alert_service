@@ -7,7 +7,7 @@ Class Wallapop
     /**
      * Parse the html response from the source
      * extracting the different ads captured.
-     * It will return a array of objects type Advertisement.
+     * It will return an array of objects type Advertisement.
      *
      * @param string $stream
      * @return array
