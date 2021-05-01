@@ -61,9 +61,10 @@ if ($alert_list->num_rows ==  0) {
 
 //Log alerts data
 $logger->nr_alerts = $alert_list->num_rows;
-Log::add($alert_list->num_rows . " alerts are being managed.");
 
 while ($alert = $alert_list->fetch_object()) {
+
+    Log::add("***  Managing alert $alert->id  ***");
 
     /**
      * Get the already related ads list
@@ -89,6 +90,8 @@ while ($alert = $alert_list->fetch_object()) {
         if ($alert_url->url == $source->url . '?') {
             goto end;
         }
+
+        Log::add('Getting data from: ' . $alert_url->url);
 
         $html = new Html();
         $html->retrieve($alert_url->url);

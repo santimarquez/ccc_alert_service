@@ -30,25 +30,23 @@ class Cochesnet
 
         //Create the response (array with Advertisement objects)
         $ads_array = array();
-        $add_counter = 0;
-        foreach ($array_response["initialResults"]["items"] as $ad) {
-            $add_counter++;
-            $ads_array[$add_counter] = new Advertisement();
-            $ads_array[$add_counter]->source_id = $this->source_id;
-            $ads_array[$add_counter]->reference = $ad["id"];
-            $ads_array[$add_counter]->price = $ad["price"];
-            $ads_array[$add_counter]->url = $ad["url"];
-            $ads_array[$add_counter]->pic_url = $ad["img"];
+        foreach ($array_response["initialResults"]["items"] as $key => $ad) {
+            $ads_array[$key] = new Advertisement();
+            $ads_array[$key]->source_id = $this->source_id;
+            $ads_array[$key]->reference = $ad["id"];
+            $ads_array[$key]->price = $ad["price"];
+            $ads_array[$key]->url = $ad["url"];
+            $ads_array[$key]->pic_url = $ad["img"];
 
-            $ads_array[$add_counter]->phone_number = $ad["phone"];
-            $ads_array[$add_counter]->kms = $ad["km"];
-            (strpos($ad["title"], "AT")) ? $ads_array[$add_counter]->gear = "A" : $ads_array[$add_counter]->gear = "M";
+            $ads_array[$key]->phone_number = $ad["phone"];
+            $ads_array[$key]->kms = $ad["km"];
+            $ads_array[$key]->gear =(strpos($ad["title"], "AT")) ?  "A" :  "M";
             if (strpos($ad["title"], "CV ")) {
                 $title_exploded = explode("CV ", $ad["title"]);
                 $title_exploded = explode(" ", $title_exploded[0]);
-                $ads_array[$add_counter]->power = $title_exploded[count($title_exploded) - 1];
+                $ads_array[$key]->power = $title_exploded[count($title_exploded) - 1];
             }
-            $ads_array[$add_counter]->year = $ad["year"];
+            $ads_array[$key]->year = $ad["year"];
         }
 
         return $ads_array;

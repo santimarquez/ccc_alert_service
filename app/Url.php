@@ -35,14 +35,12 @@ class Url
      */
     public function append($get_var_list)
     {
-        if ($this->query === NULL) {
-            $get_string = '?';
-        }
+        $get_string = '';
 
         while ($get_var = $get_var_list->fetch_object()) {
             $get_string .= $get_var->get_variable . '=' . $get_var->value . '&';
         }
 
-        $this->url .= rtrim($get_string, '&');
+        $this->url .= str_replace(' ', '%20', rtrim($get_string, '&'));
     }
 }
