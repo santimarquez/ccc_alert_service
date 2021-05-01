@@ -29,7 +29,7 @@ Class Wallapop
             $ads_array[$add_counter]->pic_url = $ad["content"]["images"][0]["original"];
 
             $ads_array[$add_counter]->phone_number = NULL;
-            (isset($ad["content"]["km"])) ? $ads_array[$add_counter]->kms = $ad["content"]["km"] : $ads_array[$add_counter]->kms = NULL;
+            $ads_array[$add_counter]->kms = (isset($ad["content"]["km"])) ? $ad["content"]["km"] : NULL;
             ($ad["content"]["gearbox"] == "manual") ? $ads_array[$add_counter]->gear = "M" : $ads_array[$add_counter]->gear = "A";
             (isset($ad["content"]["horsepower"])) ? $ads_array[$add_counter]->power = $ad["content"]["horsepower"] : $ads_array[$add_counter]->power = NULL;
             $ads_array[$add_counter]->year = $ad["content"]["year"];
