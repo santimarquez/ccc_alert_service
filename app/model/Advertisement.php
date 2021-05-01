@@ -51,7 +51,7 @@ class Advertisement
         $advertisement = new Advertisement();
         $result = Database::db('dyn_db', 'SELECT *
                                           FROM dyn_db.advertisement
-                                          WHERE uac = ' . $uac_id);
+                                          WHERE uac = "' . $uac_id . '"');
 
         $row = $result->fetch_object();
         if (mysqli_num_rows($result) === 1) {
@@ -95,7 +95,7 @@ class Advertisement
     {
         $result = Database::db('dyn_db', 'SELECT id
                                           FROM dyn_db.advertisement
-                                          WHERE uac = ' . $uac_id);
+                                          WHERE uac = "' . $uac_id . '"');
         if (mysqli_num_rows($result) === 1) {
             return true;
         }
