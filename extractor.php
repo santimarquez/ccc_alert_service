@@ -14,18 +14,7 @@ It will be doing the extractions based on the alerts created.
 /**
  * Firstly, add the classes autoload
  */
-spl_autoload_register(function ($class_name) {
-    $class_root_path = 'app\\';
-    if (is_file($class_root_path . $class_name . '.php')) {
-        include $class_root_path . $class_name . '.php';
-    } else {
-        foreach (glob($class_root_path . '*', GLOB_ONLYDIR) as $dir) {
-            if (is_file($dir . '\\' . $class_name . '.php')) {
-                include $dir . '\\' . $class_name . '.php';
-            }
-        }
-    }
-});
+include 'autoload.php';
 
 /**
  * Load the environment variables
@@ -146,7 +135,7 @@ while ($alert = $alert_list->fetch_object()) {
 
                 if ($ad->id = $ad->save()) {
                     $logger->ads_inserted++;
-                    
+
                     //Insert the alert-ad relation:
                     $alert_add_relation = new AdAlertRelation();
                     $alert_add_relation->alert_id = $alert->id;

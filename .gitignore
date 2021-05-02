@@ -6,3 +6,4 @@ response.json
 *.json
 temp
 database/data_files
+.env
