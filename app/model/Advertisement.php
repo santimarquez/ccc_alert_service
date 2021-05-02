@@ -166,7 +166,7 @@ class Advertisement
         $set_str = '';
         foreach ($this as $property => $value) {
             if ($property === "id") continue;
-            if ($value === NULL) {
+            if ($value === NULL || $value == "") {
                 $set_str .= $property . ' = NULL,';
             } else {
                 $set_str .= $property . ' = "' . $value . '",';

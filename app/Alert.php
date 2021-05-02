@@ -2,7 +2,6 @@
 
 class Alert
 {
-    private $logger;
 
     /**
      * Get the list of alerts.

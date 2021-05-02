@@ -40,10 +40,9 @@ class MilAnunciosCoches
             $ads_array[$key]->reference = $ad["id"];
             $ads_array[$key]->price = str_replace('.', '', $ad["price"]["value"]);
             $ads_array[$key]->url = $ad["url"];
+
             $ads_array[$key]->pic_url = (isset($ad["images"][0]["src"])) ? $ad["images"][0]["src"] : NULL;
-
-            $ads_array[$key]->phone_number = $ad["firstPhoneNumber"];
-
+            $ads_array[$key]->pic_url = (isset($ad["firstPhoneNumber"])) ? $ad["firstPhoneNumber"] : NULL;
             foreach ($ad["tags"] as $tag) {
                 if ($tag["type"] === "kms") {
                     $ads_array[$key]->kms = str_replace(".", "", str_replace(" kms", "", $tag["text"]));

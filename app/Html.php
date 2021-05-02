@@ -25,7 +25,6 @@ class Html
     public function retrieve($url)
     {
         // Retrieve the standard HTML parsing array for later use.
-        $htmloptions = TagFilter::GetHTMLOptions();
         $web = new WebBrowser();
         $result = $web->Process($url);
 

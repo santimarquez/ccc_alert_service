@@ -51,7 +51,7 @@ class Log
      *
      * @return string
      */
-    private function getFileName()
+    static public function getFileName()
     {
         $current_date = date("Ymd");
         return $_ENV['LOG_PATH'] . $current_date . '_errors.log';

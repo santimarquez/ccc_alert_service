@@ -153,7 +153,7 @@ while ($alert = $alert_list->fetch_object()) {
  * Section to log any critical error found
  */
 log_critical:
-if ($critical_error) {
+if ($critical_error = true) {
     $logger->critical_error = true;
     Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
 }
@@ -166,3 +166,8 @@ end:
 $logger->end_timestamp = date('Y-m-d H:i:s');
 $logger->recordDB();
 Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
+
+if($critical_error){
+    $notification = new Notification('mail', 'e');
+    $notification->send();
+}
