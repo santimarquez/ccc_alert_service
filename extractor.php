@@ -41,7 +41,6 @@ if (!$alert_list) {
     goto log_critical;
 }
 
-
 if ($alert_list->num_rows ==  0) {
     Log::add("There are no enabled alerts.");
 } else {
@@ -153,7 +152,7 @@ while ($alert = $alert_list->fetch_object()) {
  * Section to log any critical error found
  */
 log_critical:
-if ($critical_error = true) {
+if ($critical_error) {
     $logger->critical_error = true;
     Log::add("ERROR: THE SCRIPT DIDN'T FINISH DUE TO A CRITICAL ERROR.");
 }
@@ -167,7 +166,8 @@ $logger->end_timestamp = date('Y-m-d H:i:s');
 $logger->recordDB();
 Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
 
-if($critical_error){
-    $notification = new Notification('mail', 'e');
+if ($critical_error) {
+    $notification = new Notification('mail', $resources);
+    $notification->setType('error');
     $notification->send();
 }

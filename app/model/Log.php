@@ -61,7 +61,7 @@ class Log
      * Add time print and the string received as parameter
      * to the file
      *
-     * @param [string] $string
+     * @param string $string
      * @return bolean
      */
     static public function add($string)
