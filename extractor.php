@@ -167,7 +167,7 @@ $logger->recordDB();
 Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
 
 if ($critical_error) {
-    $notification = new Notification('mail', $resources);
+    $notification = new Notification('mail');
     $notification->setType('error');
     $notification->send();
 }

@@ -10,7 +10,7 @@
  * Otherwise, it will be sent to the server admin.
  * 
  */
-$this->resources_required = true;
+$this->resources_required = false;
 $this->footer_layout = 'warning';
 $this->header_layout = 'warning';
 

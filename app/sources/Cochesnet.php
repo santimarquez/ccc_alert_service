@@ -34,6 +34,7 @@ class Cochesnet
             $ads_array[$key] = new Advertisement();
             $ads_array[$key]->source_id = $this->source_id;
             $ads_array[$key]->reference = $ad["id"];
+            $ads_array[$key]->title = $ad["title"];
             $ads_array[$key]->price = $ad["price"];
             $ads_array[$key]->url = $ad["url"];
 

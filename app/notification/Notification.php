@@ -14,7 +14,7 @@ class Notification
      * @param string $notification_type
      * @param array $resources
      */
-    function __construct($notification_type = 'mail', $resources = NULL)
+    function __construct($notification_type = 'mail', $resources = array())
     {
         $this->notification = ($notification_type == 'mail') ? new MailNotification() : NULL;
         $this->resources = $resources;
@@ -51,11 +51,12 @@ class Notification
             $this->notification_type = $notification_name;
             $this->notification->importBackend($notification_name, $this->resources);
             $this->notification->loadView($notification_name, $this->resources);
-
-            if (empty($this->resources) && $this->notification->resources_required) {
-                Log::add('The notification type required resources, but it was empty.');
-                $this->error_flag = true;
-                return false;
+            if (isset($this->notification->resources_required)) {
+                if (empty($this->resources) && $this->notification->resources_required) {
+                    Log::add('The notification type required resources, but it was empty.');
+                    $this->error_flag = true;
+                    return false;
+                }
             }
         } catch (Exception $e) {
             Log::add('Error setting the notification type. The notification won\'t be sent.');
