@@ -10,9 +10,9 @@ class Alert
      *
      * @return object
      */
-    static function getAlertList()
+    static public function getAlertList()
     {
-        $result = Database::db('dyn_db', 'SELECT a.id, u.email 
+        $result = Database::db('dyn_db', 'SELECT a.id, a.user_id, u.email 
                                             FROM alert a, user u 
                                             WHERE a.user_id = u.id 
                                             AND a.enabled = 1');
@@ -25,7 +25,7 @@ class Alert
      * @param int $id
      * @return object
      */
-    static function find($id)
+    static public function find($id)
     {
         $result = Database::db('dyn_db', 'SELECT a.id, u.email 
                                             FROM alert a, user u 
@@ -41,11 +41,12 @@ class Alert
      * @param int $id
      * @return object
      */
-    static function findExtended($id)
+    static public function findExtended($id)
     {
         $result = Database::db('dyn_db', 'SELECT *
                                           FROM dyn_db.active_alerts
                                           WHERE id = ' . $id);
-        return $result;
+                                    
+        return $result->fetch_object();
     }
 }

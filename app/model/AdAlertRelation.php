@@ -32,6 +32,14 @@ class AdAlertRelation
 
         return false;
     }
+    static public function countAssocAds($alert_id)
+    {
+        $result = Database::db('app_db', 'SELECT advertisement_id
+                                          FROM dyn_db.ad_alert_relation
+                                          WHERE alert_id = ' . $alert_id);
+
+        return $result->num_rows;
+    }
 
     /**
      * Will detect if the ad needs to be

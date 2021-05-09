@@ -27,7 +27,6 @@ include 'autoload.php';
 
 $logger = new Log();
 $critical_error = false;
-
 /**
  * Log the service execution kick off.
  */
@@ -52,12 +51,18 @@ $logger->nr_alerts = $alert_list->num_rows;
 
 while ($alert = $alert_list->fetch_object()) {
 
+    //Setup the necessary information for the alert:
+    $ads_to_alert = array();
+
+
     Log::add("***  Managing alert $alert->id  ***");
 
     /**
      * Get the already related ads list
      */
     $alert_related_ads = AdAlertRelation::getAssocAds($alert->id);
+    $alert_num_related_ads = count($alert_related_ads);
+
     /**
      * Get the list of sources
      */
@@ -109,7 +114,9 @@ while ($alert = $alert_list->fetch_object()) {
                     $alert_add_relation = new AdAlertRelation();
                     $alert_add_relation->alert_id = $alert->id;
                     $alert_add_relation->advertisement_id = $ad->id;
-                    $alert_add_relation->save();
+                    if ($alert_add_relation->save() && $alert_num_related_ads > 0) {
+                        $ads_to_alert[] = $ad;
+                    }
                 }
 
                 if ($ad != $found_ad) {
@@ -139,11 +146,59 @@ while ($alert = $alert_list->fetch_object()) {
                     $alert_add_relation = new AdAlertRelation();
                     $alert_add_relation->alert_id = $alert->id;
                     $alert_add_relation->advertisement_id = $ad->id;
-                    $alert_add_relation->save();
+                    if ($alert_add_relation->save() && $alert_num_related_ads > 0) {
+                        $ads_to_alert[] = $ad;
+                    }
                 } else {
                     $logger->errors_found++;
                 }
             }
+        }
+    }
+
+    /**
+     * 
+     * Parse the $ads_to_alert
+     * to remove those that doesn't fit on
+     * the requirements
+     * 
+     */
+
+    $alert_info = Alert::findExtended($alert->id);
+    foreach ($ads_to_alert as $key => $ad) {
+        if ($ad->price > $alert_info->trigger_price) {
+            unset($ads_to_alert[$key]);
+        }
+    }
+
+    /**
+     * 
+     * If there are ads that meet the alert criteria,
+     * prepare the necessary resources and send email.
+     * 
+     */
+
+    if (!empty($ads_to_alert)) {
+        Log::add(" Alerts found, launch the process to send notification...");
+        try {
+            //Prepare the resources to be sent:
+            $resources = new MailResources();
+            $resources->setAddress(User::find($alert->user_id));
+            foreach ($ads_to_alert as $ad) {
+                $resources->setContainer($ad);
+            }
+            $resources->verify();
+
+            //Send email:
+            $notification = new Notification('mail', $resources);
+            $notification->setType('newAdvertisement');
+            if ($notification->send()) {
+                Log::add("Notification sent to the user: at least one ad meets the requirements");
+            }
+        } catch (Exception $e) {
+            Log::add("An alert should have been sent, but an error was found.");
+            $critical_error = true;
+            goto log_critical;
         }
     }
 }

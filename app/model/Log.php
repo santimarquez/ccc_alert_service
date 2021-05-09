@@ -66,6 +66,11 @@ class Log
      */
     static public function add($string)
     {
+        //Print log to screen if enabled
+        if ($_ENV["LOG_TO_SCREEN"]) {
+            echo $string . "\r\n";
+        }
+
         $logger = new Log();
 
         $logger->file_pointer = $logger->openFile();

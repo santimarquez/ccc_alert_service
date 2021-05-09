@@ -19,8 +19,8 @@ class Advertisement
      * Find an specific advertisement based on the id
      * and returns a new instance with it's properties.
      *
-     * @param [int] $id
-     * @return object
+     * @param int $id
+     * @return object|boolean
      */
     static function find($id)
     {
@@ -43,8 +43,8 @@ class Advertisement
      * Find an specific advertisement based on the unique ad code (uac)
      * and returns a new instance with it's properties.
      *
-     * @param [int] $uac_id
-     * @return object
+     * @param int $uac_id
+     * @return object|boolean
      */
     static function findUnique($uac_id)
     {
@@ -69,7 +69,7 @@ class Advertisement
      * Returns true or false depending if the ad
      * has been found in the database based on id
      *
-     * @param [int] $id
+     * @param int $id
      * @return boolean
      */
     static function exists($id)
@@ -88,7 +88,7 @@ class Advertisement
      * Returns true or false depending if the ad
      * has been found in the database based on uac
      *
-     * @param [int] $uac_id
+     * @param int $uac_id
      * @return boolean
      */
     static function existsUnique($uac_id)
@@ -162,20 +162,23 @@ class Advertisement
      */
     private function update()
     {
-
-        $set_str = '';
-        foreach ($this as $property => $value) {
-            if ($property === "id") continue;
-            if ($value === NULL || $value == "") {
-                $set_str .= $property . ' = NULL,';
-            } else {
-                $set_str .= $property . ' = "' . $value . '",';
+        try{
+            $set_str = '';
+            foreach ($this as $property => $value) {
+                if ($property === "id") continue;
+                if ($value === NULL || $value == "") {
+                    $set_str .= $property . ' = NULL,';
+                } else {
+                    $set_str .= $property . ' = "' . $value . '",';
+                }
             }
+    
+            $set_str = rtrim($set_str, ',');
+    
+            return Database::db('dyn_db', 'UPDATE dyn_db.advertisement SET ' . $set_str .
+                ' WHERE id = ' . $this->id);
+        }catch(Exception $e){
+            return false;
         }
-
-        $set_str = rtrim($set_str, ',');
-
-        return Database::db('dyn_db', 'UPDATE dyn_db.advertisement SET ' . $set_str .
-            ' WHERE id = ' . $this->id);
     }
 }

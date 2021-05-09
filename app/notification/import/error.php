@@ -21,7 +21,7 @@ $this->header_layout = 'warning';
  */
 
 //Mail subject
-$this->mail->Subject = '[!IMPORTANT] Error detected on CCC Service';
+$this->mail->Subject = '[!IMPORTANT] Error detected on Alerts Service';
 
 //Mail attachments
 $this->addAttachment(Log::getFileName());

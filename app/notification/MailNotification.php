@@ -9,6 +9,7 @@ class MailNotification
     private $layouts_path = __DIR__ . '/view/layout/';
     private $footer_layout;
     private $header_layout;
+    private $dynamic_body;
 
     /**
      * Creates a new instance of PHPMailer
@@ -133,8 +134,22 @@ class MailNotification
     {
         try {
             $notification_name .= '.html';
-            $this->mail->Body = file_get_contents($this->layouts_path . $this->header_layout . '-header.html');
-            $this->mail->Body .= file_get_contents($this->view_path . $notification_name);
+
+            //Add HTML header for the email:
+            $header_file_path = $this->layouts_path . $this->header_layout . '-header.html';
+            if(is_file($header_file_path)){
+                $this->mail->Body = file_get_contents($header_file_path);
+            }
+
+            //Add HTML full body for the email:
+            $body_file_path = $this->view_path . $notification_name;
+            if(is_file($body_file_path)){
+                $this->mail->Body .= file_get_contents($body_file_path);
+            }else{
+                $this->mail->Body .= $this->dynamic_body;
+            }
+
+            //Add HTML footer for the email:
             $this->mail->Body .= file_get_contents($this->layouts_path . $this->footer_layout . '-footer.html');
         } catch (Exception $e) {
             Log::add("Error including the view: " . $this->mail->ErrorInfo);
