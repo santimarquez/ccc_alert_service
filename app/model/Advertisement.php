@@ -162,7 +162,7 @@ class Advertisement
      */
     private function update()
     {
-        try{
+        try {
             $set_str = '';
             foreach ($this as $property => $value) {
                 if ($property === "id") continue;
@@ -172,12 +172,12 @@ class Advertisement
                     $set_str .= $property . ' = "' . $value . '",';
                 }
             }
-    
+
             $set_str = rtrim($set_str, ',');
-    
+
             return Database::db('dyn_db', 'UPDATE dyn_db.advertisement SET ' . $set_str .
                 ' WHERE id = ' . $this->id);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

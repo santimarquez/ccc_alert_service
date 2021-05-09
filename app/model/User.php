@@ -5,6 +5,13 @@ class User
     public $id;
     public $email;
 
+    /**
+     * Get an User from the database
+     * based on the user's id
+     *
+     * @param int $id
+     * @return object|boolean
+     */
     static function find($id)
     {
         $instance = new self();

@@ -8,10 +8,10 @@ class Database
      * It will log any error ocurred.
      * It returns the connector.
      *
-     * @param [string] $host
-     * @param [string] $user
-     * @param [string] $pass
-     * @param [string] $database
+     * @param string $host
+     * @param string $user
+     * @param string $pass
+     * @param string $database
      * @return object
      */
     static private function connect($host, $user, $pass, $database)
@@ -29,8 +29,8 @@ class Database
     /**
      * Launch the query against the given database.
      *
-     * @param [object] $mysqli
-     * @param [string] $query
+     * @param object $mysqli
+     * @param string $query
      * @return object
      */
     static private function exec($mysqli, $query)

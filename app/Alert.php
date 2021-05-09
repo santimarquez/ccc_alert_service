@@ -46,7 +46,7 @@ class Alert
         $result = Database::db('dyn_db', 'SELECT *
                                           FROM dyn_db.active_alerts
                                           WHERE id = ' . $id);
-                                    
+
         return $result->fetch_object();
     }
 }

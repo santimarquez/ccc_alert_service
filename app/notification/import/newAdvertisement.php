@@ -33,7 +33,7 @@ foreach ($resources->containerable as $ad) {
     $this->dynamic_body .= '<tr class="container">
                                 <td>
                                     <table class="advertisement">';
-                $this->dynamic_body .= '<tr>
+    $this->dynamic_body .= '<tr>
                                             <td>
                                                 <a href="' . $ad->url . '">
                                                     <img width="100%" height="auto"
@@ -42,8 +42,8 @@ foreach ($resources->containerable as $ad) {
                                                 </a>
                                             </td>
                                         </tr>';
-                $this->dynamic_body .= '<tr><td><h3><a href="' . $ad->url . '">' . $ad->title . '</a></h3></td></tr>';
-                $this->dynamic_body .= '<tr>
+    $this->dynamic_body .= '<tr><td><h3><a href="' . $ad->url . '">' . $ad->title . '</a></h3></td></tr>';
+    $this->dynamic_body .= '<tr>
                                             <td>
                                             <table class="advertisement-detail">
                                                 <tr>
@@ -66,7 +66,6 @@ foreach ($resources->containerable as $ad) {
                                      src="https://i.imgur.com/Za3ZGa4.png">
                                 </td>
                             </tr>';
-
 }
 
 $this->dynamic_body .= '<tr><td>Te hemos enviado este email, puesto que este/s coche/s tienen un precio inferior al que has configurado en tu alarma. Si esto no es correcto, por favor, remítenoslo <a href="mailto:' . $_ENV["SUPPORT_EMAIL"] . '">aquí</a>. </td></tr>';

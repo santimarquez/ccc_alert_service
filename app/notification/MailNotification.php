@@ -137,15 +137,15 @@ class MailNotification
 
             //Add HTML header for the email:
             $header_file_path = $this->layouts_path . $this->header_layout . '-header.html';
-            if(is_file($header_file_path)){
+            if (is_file($header_file_path)) {
                 $this->mail->Body = file_get_contents($header_file_path);
             }
 
             //Add HTML full body for the email:
             $body_file_path = $this->view_path . $notification_name;
-            if(is_file($body_file_path)){
+            if (is_file($body_file_path)) {
                 $this->mail->Body .= file_get_contents($body_file_path);
-            }else{
+            } else {
                 $this->mail->Body .= $this->dynamic_body;
             }
 

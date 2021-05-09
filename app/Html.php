@@ -19,7 +19,7 @@ class Html
      * Store the content in the property stream
      * Fill the exist switch.
      *
-     * @param [string] $url
+     * @param string $url
      * @return void
      */
     public function retrieve($url)
