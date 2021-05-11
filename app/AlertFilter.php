@@ -6,8 +6,8 @@ class AlertFilter
      * Get the list of alerts available for the selected
      * alert.
      * 
-     * @param [int] $alert_id
-     * @param [int] $source_id
+     * @param int $alert_id
+     * @param int $source_id
      * @return object
      */
     static public function getFilters($alert_id, $source_id)

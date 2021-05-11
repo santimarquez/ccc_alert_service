@@ -14,18 +14,7 @@ It will be doing the extractions based on the alerts created.
 /**
  * Firstly, add the classes autoload
  */
-spl_autoload_register(function ($class_name) {
-    $class_root_path = 'app\\';
-    if (is_file($class_root_path . $class_name . '.php')) {
-        include $class_root_path . $class_name . '.php';
-    } else {
-        foreach (glob($class_root_path . '*', GLOB_ONLYDIR) as $dir) {
-            if (is_file($dir . '\\' . $class_name . '.php')) {
-                include $dir . '\\' . $class_name . '.php';
-            }
-        }
-    }
-});
+include 'autoload.php';
 
 /**
  * Load the environment variables
@@ -38,7 +27,6 @@ spl_autoload_register(function ($class_name) {
 
 $logger = new Log();
 $critical_error = false;
-
 /**
  * Log the service execution kick off.
  */
@@ -52,7 +40,6 @@ if (!$alert_list) {
     goto log_critical;
 }
 
-
 if ($alert_list->num_rows ==  0) {
     Log::add("There are no enabled alerts.");
 } else {
@@ -64,12 +51,18 @@ $logger->nr_alerts = $alert_list->num_rows;
 
 while ($alert = $alert_list->fetch_object()) {
 
+    //Setup the necessary information for the alert:
+    $ads_to_alert = array();
+
+
     Log::add("***  Managing alert $alert->id  ***");
 
     /**
      * Get the already related ads list
      */
     $alert_related_ads = AdAlertRelation::getAssocAds($alert->id);
+    $alert_num_related_ads = count($alert_related_ads);
+
     /**
      * Get the list of sources
      */
@@ -121,7 +114,9 @@ while ($alert = $alert_list->fetch_object()) {
                     $alert_add_relation = new AdAlertRelation();
                     $alert_add_relation->alert_id = $alert->id;
                     $alert_add_relation->advertisement_id = $ad->id;
-                    $alert_add_relation->save();
+                    if ($alert_add_relation->save() && $alert_num_related_ads > 0) {
+                        $ads_to_alert[] = $ad;
+                    }
                 }
 
                 if ($ad != $found_ad) {
@@ -146,16 +141,64 @@ while ($alert = $alert_list->fetch_object()) {
 
                 if ($ad->id = $ad->save()) {
                     $logger->ads_inserted++;
-                    
+
                     //Insert the alert-ad relation:
                     $alert_add_relation = new AdAlertRelation();
                     $alert_add_relation->alert_id = $alert->id;
                     $alert_add_relation->advertisement_id = $ad->id;
-                    $alert_add_relation->save();
+                    if ($alert_add_relation->save() && $alert_num_related_ads > 0) {
+                        $ads_to_alert[] = $ad;
+                    }
                 } else {
                     $logger->errors_found++;
                 }
             }
+        }
+    }
+
+    /**
+     * 
+     * Parse the $ads_to_alert
+     * to remove those that doesn't fit on
+     * the requirements
+     * 
+     */
+
+    $alert_info = Alert::findExtended($alert->id);
+    foreach ($ads_to_alert as $key => $ad) {
+        if ($ad->price > $alert_info->trigger_price) {
+            unset($ads_to_alert[$key]);
+        }
+    }
+
+    /**
+     * 
+     * If there are ads that meet the alert criteria,
+     * prepare the necessary resources and send email.
+     * 
+     */
+
+    if (!empty($ads_to_alert)) {
+        Log::add(" Alerts found, launch the process to send notification...");
+        try {
+            //Prepare the resources to be sent:
+            $resources = new MailResources();
+            $resources->setAddress(User::find($alert->user_id));
+            foreach ($ads_to_alert as $ad) {
+                $resources->setContainer($ad);
+            }
+            $resources->verify();
+
+            //Send email:
+            $notification = new Notification('mail', $resources);
+            $notification->setType('newAdvertisement');
+            if ($notification->send()) {
+                Log::add("Notification sent to the user: at least one ad meets the requirements");
+            }
+        } catch (Exception $e) {
+            Log::add("An alert should have been sent, but an error was found.");
+            $critical_error = true;
+            goto log_critical;
         }
     }
 }
@@ -177,3 +220,9 @@ end:
 $logger->end_timestamp = date('Y-m-d H:i:s');
 $logger->recordDB();
 Log::add("-------------------------- END OF THE PROCESS --------------------------\n\n");
+
+if ($critical_error) {
+    $notification = new Notification('mail');
+    $notification->setType('error');
+    $notification->send();
+}

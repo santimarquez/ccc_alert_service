@@ -21,8 +21,7 @@ class AdAlertRelation
                                           WHERE alert_id = ' . $alert_id);
         if ($result) {
             while ($row = $result->fetch_object()) {
-                if($row->advertisement_id != "")
-                {
+                if ($row->advertisement_id != "") {
                     $array[$row->advertisement_id] = 1;
                 }
             }
@@ -31,6 +30,14 @@ class AdAlertRelation
 
 
         return false;
+    }
+    static public function countAssocAds($alert_id)
+    {
+        $result = Database::db('app_db', 'SELECT advertisement_id
+                                          FROM dyn_db.ad_alert_relation
+                                          WHERE alert_id = ' . $alert_id);
+
+        return $result->num_rows;
     }
 
     /**
@@ -71,7 +78,7 @@ class AdAlertRelation
 
         return Database::db('dyn_db', 'INSERT 
                                        INTO dyn_db.ad_alert_relation ' . $insert_field_str .
-                                        ' VALUES ' . $insert_value_str, true);
+            ' VALUES ' . $insert_value_str, true);
     }
 
     /**

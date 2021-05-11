@@ -51,7 +51,7 @@ class Log
      *
      * @return string
      */
-    private function getFileName()
+    static public function getFileName()
     {
         $current_date = date("Ymd");
         return $_ENV['LOG_PATH'] . $current_date . '_errors.log';
@@ -61,11 +61,16 @@ class Log
      * Add time print and the string received as parameter
      * to the file
      *
-     * @param [string] $string
+     * @param string $string
      * @return bolean
      */
     static public function add($string)
     {
+        //Print log to screen if enabled
+        if ($_ENV["LOG_TO_SCREEN"]) {
+            echo $string . "\r\n";
+        }
+
         $logger = new Log();
 
         $logger->file_pointer = $logger->openFile();

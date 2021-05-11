@@ -34,12 +34,13 @@ class Cochesnet
             $ads_array[$key] = new Advertisement();
             $ads_array[$key]->source_id = $this->source_id;
             $ads_array[$key]->reference = $ad["id"];
+            $ads_array[$key]->title = $ad["title"];
             $ads_array[$key]->price = $ad["price"];
             $ads_array[$key]->url = $ad["url"];
-            $ads_array[$key]->pic_url = $ad["img"];
 
-            $ads_array[$key]->phone_number = $ad["phone"];
-            $ads_array[$key]->kms = $ad["km"];
+            $ads_array[$key]->pic_url = (isset($ad["img"])) ? $ad["img"] : null;
+            $ads_array[$key]->phone_number = (isset($ad["phone"])) ? $ad["phone"] : null;
+            $ads_array[$key]->kms = (isset($ad["km"])) ? $ad["km"] : null;;
             $ads_array[$key]->gear =(strpos($ad["title"], "AT")) ?  "A" :  "M";
             if (strpos($ad["title"], "CV ")) {
                 $title_exploded = explode("CV ", $ad["title"]);

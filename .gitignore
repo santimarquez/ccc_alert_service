@@ -1,8 +1,8 @@
 ﻿log
-*.html
 content.txt
 response.json
 *.bak
 *.json
 temp
 database/data_files
+.env
